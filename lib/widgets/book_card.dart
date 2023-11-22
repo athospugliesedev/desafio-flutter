@@ -3,8 +3,9 @@ import 'package:escriboapp/models/book.dart';
 
 class BookCard extends StatelessWidget {
   final Book book;
+  final bool isFavorite;
 
-  BookCard(this.book);
+  BookCard({required this.book, required this.isFavorite});
 
   @override
   Widget build(BuildContext context) {

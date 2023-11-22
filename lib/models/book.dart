@@ -4,6 +4,7 @@ class Book {
   final String author;
   final String coverUrl;
   final String downloadUrl;
+  bool isFavorite;
 
   Book({
     required this.id,
@@ -11,6 +12,7 @@ class Book {
     required this.author,
     required this.coverUrl,
     required this.downloadUrl,
+    this.isFavorite = false, // Padrão para false
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -21,5 +23,13 @@ class Book {
       coverUrl: json['cover_url'],
       downloadUrl: json['download_url'],
     );
+  }
+
+  void toggleFavorite() {
+    isFavorite = !isFavorite;
+  }
+
+  bool getFavoriteStatus() {
+    return isFavorite;
   }
 }

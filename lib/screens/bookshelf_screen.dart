@@ -1,3 +1,4 @@
+import 'package:escriboapp/screens/favorites_screen.dart';
 import 'package:escriboapp/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:escriboapp/blocs/book_bloc.dart';
@@ -33,6 +34,21 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bookshelf'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FavoritesScreen(
+                      favoriteBooks:
+                          books.where((book) => book.isFavorite).toList()),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -63,12 +79,17 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                     Stack(
                       alignment: Alignment.topCenter,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            // Adicione a lógica para lidar com o toque em um livro, se necessário
-                          },
-                          child: BookCard(books[index]),
-                        ),
+GestureDetector(
+  onTap: () {
+    setState(() {
+      books[index].isFavorite = !books[index].isFavorite;
+    });
+  },
+  child: BookCard(
+    book: books[index],
+    isFavorite: books[index].isFavorite,
+  ),
+),
                         Container(
                           padding: EdgeInsets.all(8.0),
                           color: Colors.blue,
@@ -100,7 +121,7 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                 ),
               );
             } else {
-              return SizedBox.shrink(); 
+              return SizedBox.shrink();
             }
           },
         ),
