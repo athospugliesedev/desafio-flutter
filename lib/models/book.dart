@@ -12,7 +12,7 @@ class Book {
     required this.author,
     required this.coverUrl,
     required this.downloadUrl,
-    this.isFavorite = false, // Padrão para false
+    this.isFavorite = false, 
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {

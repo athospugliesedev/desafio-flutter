@@ -4,7 +4,6 @@ import 'package:escriboapp/repositories/book_repository.dart';
 
 import '../services/api_service.dart';
 
-// Eventos
 abstract class BookEvent {}
 
 class FetchBooksEvent extends BookEvent {
@@ -28,7 +27,6 @@ class DownloadAndReadBookEvent extends BookEvent {
   DownloadAndReadBookEvent(this.book);
 }
 
-// Estados
 abstract class BookState {}
 
 class BookInitialState extends BookState {}

@@ -11,14 +11,13 @@ class FavoritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorites'),
+        title: Text('Favoritos'),
       ),
       body: buildGridView(),
     );
   }
 
   Widget buildGridView() {
-    // Filtrar apenas os livros favoritos
     List<Book> favorites = favoriteBooks.where((book) => book.isFavorite).toList();
 
     if (favorites.isEmpty) {
@@ -36,13 +35,11 @@ class FavoritesScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            // Adicione a lógica para lidar com o toque em um livro favorito, se necessário
           },
           child: BookCard(
             book: favorites[index],
             isFavorite: favorites[index].isFavorite,
             addToFavorites: (Book book) {
-              // Adicione a lógica para adicionar/remover dos favoritos
             },
           ),
         );

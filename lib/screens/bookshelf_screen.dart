@@ -9,7 +9,6 @@ import 'package:escriboapp/widgets/book_card.dart';
 import 'package:vocsy_epub_viewer/epub_viewer.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class BookshelfScreen extends StatefulWidget {
   @override
   _BookshelfScreenState createState() => _BookshelfScreenState();
@@ -44,7 +43,7 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bookshelf'),
+        title: Text('Leitor de Ebooks • Escribo'),
         actions: [
           IconButton(
             icon: Icon(Icons.favorite),
@@ -53,7 +52,8 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => FavoritesScreen(
-                    favoriteBooks: books.where((book) => book.isFavorite).toList(),
+                    favoriteBooks:
+                        books.where((book) => book.isFavorite).toList(),
                   ),
                 ),
               );
@@ -92,7 +92,8 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            await _downloadAndOpenEpub(books[index].downloadUrl);
+                            await _downloadAndOpenEpub(
+                                books[index].downloadUrl);
                           },
                           child: BookCard(
                             book: books[index],
@@ -105,14 +106,16 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                     ),
                     SizedBox(height: 4.0),
                     Text(
-                      books[index].title,
+                      books[index].title.length > 20
+                          ? '${books[index].title.substring(0, 20)}\n${books[index].title.substring(20)}'
+                          : books[index].title,
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'Autor: ${books[index].author}',
+                      '${books[index].author}',
                       style: TextStyle(
                         fontSize: 14.0,
                         color: Colors.grey,
@@ -139,9 +142,7 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
       await dio.download(
         downloadUrl,
         filePath,
-        onReceiveProgress: (receivedBytes, totalBytes) {
-          // Callback para o progresso do download, se necessário.
-        },
+        onReceiveProgress: (receivedBytes, totalBytes) {},
       );
 
       _openEpubViewer(context, filePath);
