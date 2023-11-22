@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:escriboapp/screens/favorites_screen.dart';
 import 'package:escriboapp/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:escriboapp/blocs/book_bloc.dart';
 import 'package:escriboapp/models/book.dart';
 import 'package:escriboapp/widgets/book_card.dart';
+import 'package:vocsy_epub_viewer/epub_viewer.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class BookshelfScreen extends StatefulWidget {
   @override
@@ -31,10 +36,9 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
 
   void addToFavorites(Book book) {
     setState(() {
-      book.toggleFavorite(); 
+      book.toggleFavorite();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +53,8 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => FavoritesScreen(
-                      favoriteBooks:
-                          books.where((book) => book.isFavorite).toList()),
+                    favoriteBooks: books.where((book) => book.isFavorite).toList(),
+                  ),
                 ),
               );
             },
@@ -87,13 +91,13 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                       alignment: Alignment.topCenter,
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            addToFavorites(books[index]); // Chama a função ao clicar no livro
+                          onTap: () async {
+                            await _downloadAndOpenEpub(books[index].downloadUrl);
                           },
                           child: BookCard(
                             book: books[index],
                             isFavorite: books[index].isFavorite,
-                            addToFavorites: addToFavorites, // Passa a função para o BookCard
+                            addToFavorites: addToFavorites,
                           ),
                         ),
                         Container(),
@@ -123,6 +127,51 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Future<void> _downloadAndOpenEpub(String downloadUrl) async {
+    try {
+      Dio dio = Dio();
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String filePath = "${appDocDir.path}/downloaded_book.epub";
+
+      await dio.download(
+        downloadUrl,
+        filePath,
+        onReceiveProgress: (receivedBytes, totalBytes) {
+          // Callback para o progresso do download, se necessário.
+        },
+      );
+
+      _openEpubViewer(context, filePath);
+    } catch (e) {
+      print('Erro ao baixar e abrir o EPUB: $e');
+    }
+  }
+
+  void _openEpubViewer(BuildContext context, String epubPath) {
+    VocsyEpub.setConfig(
+      themeColor: Theme.of(context).primaryColor,
+      identifier: "iosBook",
+      scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
+      allowSharing: true,
+      enableTts: true,
+      nightMode: true,
+    );
+
+    VocsyEpub.locatorStream.listen((locator) {
+      print('LOCATOR: $locator');
+    });
+
+    VocsyEpub.open(
+      epubPath,
+      lastLocation: EpubLocator.fromJson({
+        "bookId": "2239",
+        "href": "/OEBPS/ch06.xhtml",
+        "created": 1539934158390,
+        "locations": {"cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"},
+      }),
     );
   }
 }
