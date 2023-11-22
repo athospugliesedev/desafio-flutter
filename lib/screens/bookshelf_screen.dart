@@ -29,6 +29,13 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
     }
   }
 
+  void addToFavorites(Book book) {
+    setState(() {
+      book.toggleFavorite(); 
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,27 +86,17 @@ class _BookshelfScreenState extends State<BookshelfScreen> {
                     Stack(
                       alignment: Alignment.topCenter,
                       children: [
-GestureDetector(
-  onTap: () {
-    setState(() {
-      books[index].isFavorite = !books[index].isFavorite;
-    });
-  },
-  child: BookCard(
-    book: books[index],
-    isFavorite: books[index].isFavorite,
-  ),
-),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          color: Colors.blue,
-                          child: Text(
-                            'Etiqueta',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                        GestureDetector(
+                          onTap: () {
+                            addToFavorites(books[index]); // Chama a função ao clicar no livro
+                          },
+                          child: BookCard(
+                            book: books[index],
+                            isFavorite: books[index].isFavorite,
+                            addToFavorites: addToFavorites, // Passa a função para o BookCard
                           ),
                         ),
+                        Container(),
                       ],
                     ),
                     SizedBox(height: 4.0),

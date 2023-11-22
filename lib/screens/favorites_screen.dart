@@ -26,7 +26,7 @@ class FavoritesScreen extends StatelessWidget {
     }
 
     return GridView.builder(
-      key: UniqueKey(), // Adicione uma chave única para melhorar a eficiência da reconstrução
+      key: UniqueKey(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 8.0,
@@ -38,7 +38,13 @@ class FavoritesScreen extends StatelessWidget {
           onTap: () {
             // Adicione a lógica para lidar com o toque em um livro favorito, se necessário
           },
-          child: BookCard(book: favorites[index], isFavorite: favorites[index].isFavorite),
+          child: BookCard(
+            book: favorites[index],
+            isFavorite: favorites[index].isFavorite,
+            addToFavorites: (Book book) {
+              // Adicione a lógica para adicionar/remover dos favoritos
+            },
+          ),
         );
       },
     );
